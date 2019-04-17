@@ -33,6 +33,24 @@ def expandContractions(stringWords, contractionDictionary):
             fixedStringWords.append(stringWords[i])
     return fixedStringWords
 
+def conjugateVerb(verb , flagMaleS, flagMaleP, flagFemaleS, flagFemaleP, persoana):
+    if(verb == "walk"):
+        return "merg"
+
+
+
+
+
+def conjugatePresentVerb(verb1, verb2, flagMaleS, flagMaleP, flagFemaleS, flagFemaleP, persoana):
+    if(verb1 == "am" or verb1 == "is" or verb1 == "are" or verb1 == "sunt"):
+        if(verb2 == "dormi"):
+            if(persoana == "1s" or persoana == "3mp" or persoana == "3fp"):
+                return "dorm"
+            elif(persoana == "2s"):
+                return "dormi"
+            elif(persoana == "3ms" or persoana == "3fs"):
+                return "doarme"
+
             
 def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralDict, personalDict, youDict, femaleSingularDict, femalePluralDict, adjectivesMaleSingularDict, adjectivesMalePluralDict, adjectivesFemaleSingularDict, adjectivesFemalePluralDict):
     translation = ""
@@ -40,14 +58,21 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
     flagFemaleSingular = False
     flagMalePlural = False
     flagFemalePlural = False
+    pers = ""
     i = 0
     while i < len(fixedStringWords):
         
         if fixedStringWords[i] in verbDict:
-            translation += verbDict[fixedStringWords[i]] + " "
-            i += 1
+            if fixedStringWords[i+1] in verbDict:
+                conjVerb = conjugatePresentVerb(verbDict[fixedStringWords[i]], verbDict[fixedStringWords[i+1]], flagMaleSingular, flagMalePlural, flagFemaleSingular,flagFemalePlural, pers)
+                translation += conjVerb + " "
+                i += 2
+            else:
+                translation += verbDict[fixedStringWords[i]] + " "
+                i += 1
             
         elif fixedStringWords[i] in maleSingularDict:
+            pers = "3ms"
             flagMaleSingular = True
             flagFemaleSingular = False
             flagMalePlural = False
@@ -60,6 +85,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
                 
         elif fixedStringWords[i] in malePluralDict:
+            pers = "3mp"
             flagMaleSingular = False
             flagFemaleSingular = False
             flagMalePlural = True
@@ -72,6 +98,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
 
         elif fixedStringWords[i] in femaleSingularDict:
+            pers = "3fs"
             flagMaleSingular = False
             flagFemaleSingular = True
             flagMalePlural = False
@@ -84,6 +111,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
 
         elif fixedStringWords[i] in femalePluralDict:
+            pers = "3fp"
             flagMaleSingular = False
             flagFemaleSingular = False
             flagMalePlural = False
@@ -96,6 +124,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
 
         elif fixedStringWords[i] in personalDict:
+            pers = "1s"
             flagMaleSingular = True
             flagFemaleSingular = False
             flagMalePlural = False
@@ -108,6 +137,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
 
         elif fixedStringWords[i] in youDict:
+            pers = "2s"
             flagMaleSingular = True
             flagFemaleSingular = False
             flagMalePlural = False
@@ -121,6 +151,7 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
 
         elif fixedStringWords[i] == "the":
             if fixedStringWords[i+1] in maleSingularDict:
+                pers = "3ms"
                 flagMaleSingular = True
                 flagFemaleSingular = False
                 flagMalePlural = False
@@ -132,8 +163,8 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                     translation += maleSingularDict[fixedStringWords[i+1]] + "ul "
                     i += 2
 
-            if fixedStringWords[i+1] in femaleSingularDict:
-                
+            elif fixedStringWords[i+1] in femaleSingularDict:
+                pers = "3fs"
                 flagMaleSingular = False
                 flagFemaleSingular = True
                 flagMalePlural = False
@@ -145,7 +176,8 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                     translation += femaleSingularDict[fixedStringWords[i+1]][:-1] + "a "
                     i += 2
 
-            if fixedStringWords[i+1] in malePluralDict:
+            elif fixedStringWords[i+1] in malePluralDict:
+                pers = "3mp"
                 flagMaleSingular = False
                 flagFemaleSingular = False
                 flagMalePlural = True
@@ -157,7 +189,8 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                     translation += malePluralDict[fixedStringWords[i+1]] + "i "
                     i += 2
 
-            if fixedStringWords[i+1] in femalePluralDict:
+            elif fixedStringWords[i+1] in femalePluralDict:
+                pers = "3fp"
                 flagMaleSingular = False
                 flagFemaleSingular = False
                 flagMalePlural = False
@@ -186,7 +219,6 @@ def fixFormTranslation(fixedStringWords, verbDict, maleSingularDict, malePluralD
                 i += 1
 
         elif fixedStringWords[i] in adjectivesFemaleSingularDict and flagFemaleSingular:
-            print(adjectivesFemaleSingularDict)
             if(i==0):
                 translation += adjectivesFemaleSingularDict[fixedStringWords[i]].capitalize() + " "
                 i += 1
@@ -365,13 +397,15 @@ def callBack():
     
 button_Translate = Button(root, text="Translate", command=callBack)
 
+label_1.pack()
+entry_TextToTranslate.pack()
+button_Translate.pack()
+text.pack()
 
-label_1.grid(row=0,column=0)
+"""label_1.grid(row=0,column=0)
 entry_TextToTranslate.grid(row=0,column=1)
 button_Translate.grid(row=0,column=2)
-text.grid(row=1, column = 1)
+text.grid(row=1, column = 1)"""
 
 root.mainloop()
-
-print(translateFunction(input("Enter text to translate:")))
 

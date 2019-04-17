@@ -1,6 +1,6 @@
 {"I" : "eu"}
 {"you" : "tu"}
-{"sleep" : "dormi", "am" : "sunt", "are" : "esti" , "is" : "este", "are" : "sunt"}
+{"sleeping" : "dormi", "am" : "sunt", "are" : "esti" , "is" : "este", "walk" : "merge", "walking" : "merg", }
 {"man" : "barbat", "potato" : "cartof", "snake" : "sarpe", "he" : "el", "group" : "grup"}
 {"she" : "ea", "woman" : "femeie" , "ant" : "furnica", "girl" : "fata"}
 {"men" : "barbati", "potatoes" : "cartofi" , "snakes" : "serpi", "they" : "ei" }
